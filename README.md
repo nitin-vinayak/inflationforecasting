@@ -75,15 +75,17 @@ Cross-Correlation Function used to identify optimal lags:
 ### 3. Model Specification
 
 **Baseline Model:**
+```python
 SARIMAX(inflation, order=(1,1,1), seasonal_order=(2,1,1,12))
-
+```
 
 **Enhanced Model:**
+```python
 SARIMAX(inflation, 
         exog=[oil_lag, unemployment_lag, m2_lag],
         order=(1,1,1), 
         seasonal_order=(2,1,1,12))
-
+```
 
 **ARIMA Parameters:**
 - **p=1, d=1, q=1**: First-order differencing with AR(1) and MA(1) terms
@@ -103,9 +105,9 @@ While the improvement appears small, it's statistically meaningful given:
 
 ### Economic Interpretation
 The model leverages established economic relationships:
-- **Oil shocks** → Cost-push inflation
-- **Unemployment** → Phillips curve (demand-pull inflation)
-- **M2 growth** → Monetary inflation transmission
+- **Oil shocks**: Cost-push inflation
+- **Unemployment**: Phillips curve (demand-pull inflation)
+- **M2 growth**: Monetary inflation transmission
 
 ## Data Period & Sources
 
