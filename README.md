@@ -5,10 +5,10 @@ Advanced time series forecasting framework for US inflation using SARIMAX incorp
 
 ## Key Features
 - **Multi-Model Comparison**: Baseline SARIMAX vs. Enhanced SARIMAX with exogenous variables
-- **CCF-Optimized Lags**: Data-driven lag selection for oil prices, unemployment, and M2 money supply
+- **CCF-Optimized Lags**: Data-driven lag selection for oil prices (20 months), unemployment (1 month), and M2 money supply (24 months)
 - **Seasonal Modeling**: Full seasonal ARIMA specification with 12-month periodicity
-- **ARCH Testing**: Statistical validation for heteroskedasticity (GARCH consideration)
-- **30-Year Historical Data**: 1991-2024 monthly CPI data from FRED API
+- **Comprehensive Analysis**: Exploratory data analysis, model building, performance evaluation, and business insights
+- **33-Year Historical Data**: 1991-2025 monthly CPI data from FRED API (frozen at January 24, 2025)
 
 ## Technical Stack
 
@@ -25,15 +25,15 @@ SARIMAX Configuration:
 ├── Endogenous Variable
 │   └── CPI Year-over-Year % Change
 ├── Exogenous Variables (CCF-optimized lags)
-│   ├── WTI Crude Oil Prices
-│   ├── Unemployment Rate
-│   └── M2 Money Supply
+│   ├── WTI Crude Oil Prices (differenced, lag 20 months)
+│   ├── Unemployment Rate (levels, lag 1 month)
+│   └── M2 Money Supply (differenced, lag 24 months)
 ├── ARIMA Components
 │   ├── Order: (1, 1, 1)
 │   └── Seasonal Order: (2, 1, 1, 12)
 └── Diagnostics
-    ├── ARCH-LM Test
-    └── Ljung-Box Test (squared residuals)
+    ├── Residual Analysis
+    └── Model Validation
 ```
 
 ## Model Performance
@@ -41,14 +41,14 @@ SARIMAX Configuration:
 ### Forecast Accuracy Comparison
 | Model | RMSE | MAE | Improvement |
 |-------|------|-----|-------------|
-| **Baseline SARIMAX** | 2.8286 | 2.0248 | ✓ |
-| **SARIMAX + Exogenous** | 2.7580 | 1.9623 | ✓ |
-| **% Improvement** | 2.50% | 3.09% | - |
+| **Baseline SARIMAX** | 2.9884 | 2.2173 | - |
+| **SARIMAX + Exogenous** | 2.9236 | 2.1835 | ✓ |
+| **% Improvement** | 2.17% | 1.53% | - |
 
 ### Performance Highlights
-- **2.76 RMSE**: Forecast error of ~2.76 percentage points on average
-- **1.96 MAE**: Median absolute error under 2 percentage points
-- **Exogenous Enhancement**: Adding macro variables reduces forecast error by 2.5-3%
+- **2.92 RMSE**: Enhanced model achieves forecast error of ~2.92 percentage points on average
+- **2.18 MAE**: Median absolute error of 2.18 percentage points
+- **Exogenous Enhancement**: Adding macro variables reduces forecast error by 1.5-2.2%
 
 ## Methodology
 
@@ -57,20 +57,27 @@ SARIMAX Configuration:
 Data Sources (FRED API):
 - CPIAUCSL: Consumer Price Index for All Urban Consumers
 - DCOILWTICO: WTI Crude Oil Prices ($/barrel)
+- DCOILWTICO: WTI Crude Oil Prices ($/barrel)
 - UNRATE: Unemployment Rate (%)
 - M2SL: M2 Money Supply (billions)
 
 Preprocessing:
-- Monthly frequency: 1991-2024
+- Monthly frequency: October 1991 - January 2025
 - YoY inflation calculation: 12-month % change
 - Train/Test split: 80/20
+- Data frozen at January 24, 2025 for reproducibility
 ```
 
 ### 2. Feature Engineering via CCF Analysis
-Cross-Correlation Function used to identify optimal lags:
-- **Oil Prices**: Lagged relationship with inflation
-- **Unemployment**: Phillips curve dynamics
-- **M2 Money Supply**: Monetary policy transmission
+Cross-Correlation Function analysis identified optimal lag structures:
+- **Oil Prices (DCOILWTICO)**: 20-month lag, differenced
+  - Economic Rationale: Cost-push inflation from energy prices
+- **Unemployment Rate (UNRATE)**: 1-month lag, levels
+  - Economic Rationale: Phillips curve - demand-side pressure
+- **M2 Money Supply (M2SL)**: 24-month lag, differenced
+  - Economic Rationale: Monetary inflation transmission mechanism
+
+All lags were determined through rigorous CCF analysis (see exploratory analysis notebook).
 
 ### 3. Model Specification
 
@@ -82,7 +89,7 @@ SARIMAX(inflation, order=(1,1,1), seasonal_order=(2,1,1,12))
 **Enhanced Model:**
 ```python
 SARIMAX(inflation, 
-        exog=[oil_lag, unemployment_lag, m2_lag],
+        exog=[oil_lag_20, unemployment_lag_1, m2_lag_24],
         order=(1,1,1), 
         seasonal_order=(2,1,1,12))
 ```
@@ -95,32 +102,69 @@ SARIMAX(inflation,
 
 ### Model Comparison
 The inclusion of macroeconomic fundamentals (oil, unemployment, M2) provides modest but consistent improvement:
-- RMSE reduction: 2.50%
-- MAE reduction: 3.09%
+- RMSE reduction: 2.17%
+- MAE reduction: 1.53%
 
 While the improvement appears small, it's statistically meaningful given:
 1. Inflation is notoriously difficult to forecast
 2. The baseline SARIMAX already captures strong seasonal patterns
-3. Exogenous variables add economic interpretability
+3. Exogenous variables add economic interpretability and theoretical grounding
 
 ### Economic Interpretation
 The model leverages established economic relationships:
-- **Oil shocks**: Cost-push inflation
-- **Unemployment**: Phillips curve (demand-pull inflation)
-- **M2 growth**: Monetary inflation transmission
+- **Oil shocks (20-month lag)**: Cost-push inflation with delayed transmission through supply chains
+- **Unemployment (1-month lag)**: Phillips curve dynamics - immediate demand-pull inflation effects
+- **M2 growth (24-month lag)**: Long monetary policy transmission lags highlight importance of forward-looking policy
+
+### Business Applications
+**For Central Banks:**
+- Leading indicators provide 20-24 month advance signals for inflation pressure
+- Evidence supports proactive monetary policy given long transmission lags
+
+**For Investors:**
+- Multi-factor models improve inflation hedging strategies
+- Enhanced CPI forecasts for TIPS pricing and bond portfolio management
+
+**For Businesses:**
+- Pricing strategies can anticipate inflation 1-2 years ahead using oil/M2 indicators
+- Supply chain decisions benefit from energy price forecasts
+
+## Project Structure
+```
+├── exploratory_analysis.ipynb    # CCF analysis, lag selection, data exploration
+├── inflationmodeling_enhanced.ipynb  # Model building, training, evaluation
+├── README.md                      # Project documentation
+└── requirements.txt               # Python dependencies
+```
 
 ## Data Period & Sources
 
-**Time Range:** October 1991 - 2024 (monthly)  
-**Training Period:** 1991-2019  
-**Testing Period:** 2020-2024  
-**Data Source:** Federal Reserve Economic Data (FRED)
+**Time Range:** October 1991 - January 2025 (monthly)  
+**Training Period:** ~80% of data  
+**Testing Period:** ~20% of data  
+**Data Source:** Federal Reserve Economic Data (FRED)  
+**Data Freeze Date:** January 24, 2025 (for reproducibility)
 
 ### FRED Series Codes
-- **CPIAUCSL**: Consumer Price Index
-- **DCOILWTICO**: Crude Oil Prices - WTI
+- **CPIAUCSL**: Consumer Price Index for All Urban Consumers
+- **DCOILWTICO**: Crude Oil Prices - West Texas Intermediate
 - **UNRATE**: Civilian Unemployment Rate
 - **M2SL**: M2 Money Stock
+
+## Limitations & Future Work
+
+### Current Limitations
+- Linear SARIMAX assumes stable relationships that may break during structural shifts
+- Does not account for policy interventions or supply shocks
+- Limited to three predictors; many other factors influence inflation
+- Requires accurate forecasts of exogenous variables themselves
+
+### Future Enhancements
+- Implement hyperparameter tuning via grid search or auto-ARIMA
+- Test additional exogenous variables (housing costs, wages, import prices)
+- Explore nonlinear models (machine learning approaches)
+- Conduct rolling window cross-validation for robust assessment
+- Develop interactive dashboard for scenario analysis
 
 ## Contact & Links
 
