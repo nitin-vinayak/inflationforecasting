@@ -8,7 +8,7 @@ Advanced time series forecasting framework for US inflation using SARIMAX incorp
 - **CCF-Optimized Lags**: Data-driven lag selection for oil prices (20 months), unemployment (1 month), and M2 money supply (24 months)
 - **Seasonal Modeling**: Full seasonal ARIMA specification with 12-month periodicity
 - **Comprehensive Analysis**: Exploratory data analysis, model building, performance evaluation, and business insights
-- **33-Year Historical Data**: 1991-2025 monthly CPI data from FRED API (frozen at January 24, 2025)
+- **33-Year Historical Data**: 1991-2025 monthly CPI data from FRED API 
 
 ## Technical Stack
 
@@ -41,14 +41,14 @@ SARIMAX Configuration:
 ### Forecast Accuracy Comparison
 | Model | RMSE | MAE | 
 |-------|------|-----|
-| **Baseline SARIMAX** | 2.9884 | 2.2173 | 
-| **SARIMAX + Exogenous** | 2.9236 | 2.1835 | 
-| **% Improvement** | 2.17% | 1.53% | 
+| **Baseline SARIMAX** | 2.9049 | 2.0583 | 
+| **SARIMAX + Exogenous** | 2.818 | 2.0176 | 
+| **% Improvement** | 3% | 2% | 
 
 ### Performance Highlights
-- **2.92 RMSE**: Enhanced model achieves forecast error of ~2.92 percentage points on average
-- **2.18 MAE**: Median absolute error of 2.18 percentage points
-- **Exogenous Enhancement**: Adding macro variables reduces forecast error by 1.5-2.2%
+- **2.82 RMSE**: Enhanced model achieves forecast error of ~2.82 percentage points on average
+- **2.02 MAE**: Mean absolute error of 2.02 percentage points
+- **Exogenous Enhancement**: Adding macro variables reduces forecast error by 2-3%
 
 ## Methodology
 
@@ -57,7 +57,6 @@ SARIMAX Configuration:
 Data Sources (FRED API):
 - CPIAUCSL: Consumer Price Index for All Urban Consumers
 - DCOILWTICO: WTI Crude Oil Prices ($/barrel)
-- DCOILWTICO: WTI Crude Oil Prices ($/barrel)
 - UNRATE: Unemployment Rate (%)
 - M2SL: M2 Money Supply (billions)
 
@@ -65,7 +64,7 @@ Preprocessing:
 - Monthly frequency: October 1991 - January 2025
 - YoY inflation calculation: 12-month % change
 - Train/Test split: 80/20
-- Data frozen at January 24, 2025 for reproducibility
+- Data frozen at January 01, 2025 for reproducibility
 ```
 
 ### 2. Feature Engineering via CCF Analysis
@@ -102,8 +101,8 @@ SARIMAX(inflation,
 
 ### Model Comparison
 The inclusion of macroeconomic fundamentals (oil, unemployment, M2) provides modest but consistent improvement:
-- RMSE reduction: 2.17%
-- MAE reduction: 1.53%
+- RMSE reduction: 3%
+- MAE reduction: 2%
 
 While the improvement appears small, it's statistically meaningful given:
 1. Inflation is notoriously difficult to forecast
@@ -131,19 +130,19 @@ The model leverages established economic relationships:
 
 ## Project Structure
 ```
-├── exploratory_analysis.ipynb    # CCF analysis, lag selection, data exploration
-├── inflationmodeling_enhanced.ipynb  # Model building, training, evaluation
-├── README.md                      # Project documentation
-└── requirements.txt               # Python dependencies
+├── exploratory_analysis.ipynb    
+├── inflationforecasting.ipynb  
+├── README.md                     
+└── requirements.txt      
 ```
 
 ## Data Period & Sources
 
-**Time Range:** October 1991 - January 2025 (monthly)  
+**Time Range:** October 1991 - January 2025 
 **Training Period:** ~80% of data  
 **Testing Period:** ~20% of data  
 **Data Source:** Federal Reserve Economic Data (FRED)  
-**Data Freeze Date:** January 24, 2025 (for reproducibility)
+**Data Freeze Date:** January 01, 2025 (for reproducibility)
 
 ### FRED Series Codes
 - **CPIAUCSL**: Consumer Price Index for All Urban Consumers
