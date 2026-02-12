@@ -39,11 +39,11 @@ SARIMAX Configuration:
 ## Model Performance
 
 ### Forecast Accuracy Comparison
-| Model | RMSE | MAE | Improvement |
-|-------|------|-----|-------------|
-| **Baseline SARIMAX** | 2.9884 | 2.2173 | - |
-| **SARIMAX + Exogenous** | 2.9236 | 2.1835 | ✓ |
-| **% Improvement** | 2.17% | 1.53% | - |
+| Model | RMSE | MAE | 
+|-------|------|-----|
+| **Baseline SARIMAX** | 2.9884 | 2.2173 | 
+| **SARIMAX + Exogenous** | 2.9236 | 2.1835 | 
+| **% Improvement** | 2.17% | 1.53% | 
 
 ### Performance Highlights
 - **2.92 RMSE**: Enhanced model achieves forecast error of ~2.92 percentage points on average
